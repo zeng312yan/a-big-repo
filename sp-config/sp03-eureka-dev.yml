@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: eureka-server  # 应用名相同，eureka 集群服务器之间，通过 hostname 来区分
+    
+#server:
+#  port: 2001
+  
+eureka:
+  server:
+    enable-self-preservation: false  #允许自我保护，开发期间设置为false
+#  instance:
+#    hostname: eureka1
+#  client:
+#    register-with-eureka: false
+#    fetch-registry: false
+
+---
+spring:
+  profiles: eureka1
+  
+server:
+  port: 2001
+  
+#eureka1向eureka2注册
+eureka:
+  instance:
+    hostname: eureka1
+  client:
+    service-url:
+      defaultZone: http://eureka2:2002/eureka
+      
+---
+spring:
+  profiles: eureka2
+
+server:
+  port: 2002
+  
+# eureka2 向 eureka1 注册
+eureka:
+  instance:
+    hostname: eureka2
+  client:
+    service-url:
+      defaultZone: http://eureka1:2001/eureka
+
